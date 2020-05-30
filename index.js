@@ -4,13 +4,16 @@ const cors = require('cors')
 const path = require('path').resolve()
 const http = require('http')
 const express = require('express')
+const socketIo = require('socket.io')
 const { readdir, existsSync } = require('fs')
 
 const Rapp = require('./class/Rapp')
 
 const app = express()
 
-http.createServer(app).listen(port, () => { console.log('Non-SSL Server is now on http://localhost:' + port) })
+const srv = http.createServer(app).listen(port, () => { console.log('Non-SSL Server is now on http://localhost:' + port) })
+
+const socket = socketIo(srv)
 
 Rapp.reg(app)
 
@@ -36,6 +39,6 @@ readdir(path + '/router', (err, routers) => {
     }
 
     const rapp = new Rapp(router._root, router._host)
-    router.ready(rapp, router._socket)
+    router.ready(rapp, socket)
   })
 })
