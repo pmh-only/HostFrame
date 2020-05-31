@@ -4,7 +4,7 @@ const { get } = require('superagent')
  * @param {import('socket.io').Socket} s
  */
 module.exports = (_, s) => {
-  get('localhost:8002/api?target=neko&type=url', (err, res) => {
+  get('localhost:8002/api/?target=neko&type=url', (err, res) => {
     if (err) console.log(err)
     get('localhost:8002' + res.text, (err2, res2) => {
       if (err2) console.log(err2)
