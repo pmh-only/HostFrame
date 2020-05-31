@@ -22,7 +22,7 @@ function ready (_, socket) {
       const query = new Query(context)
       const target = commands.find((v) => v.aliases.includes(query.cmd))
       if (target) target(query, s)
-      else s.emit('main:resv', '<h1 style="animation: shake 0.5s; color: red;">Error!</h1><hr />Command "' + query.cmd + '" not found')
+      else s.emit('main:resv', '<h1 style="animation: shake 0.5s; color: red;">Error.</h1><hr />Command "' + query.cmd + '" not found')
     })
   })
 }

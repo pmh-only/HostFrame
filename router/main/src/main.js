@@ -22,6 +22,6 @@ window.onload = () => {
   })
 
   socket.on('main:ping', () => {
-    socket.emit('main:pong', Date.now())
+    socket.emit('main:pong')
   })
 }
