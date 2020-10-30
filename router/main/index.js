@@ -3,6 +3,9 @@ module.exports = { _root: '/main', _socket: false, _cors: true, _parser: [], rea
 const Query = require('./classes/Query')
 const { resolve: path } = require('path')
 const { readdir } = require('fs')
+const knex = require('knex')
+
+const db = knex({ client: 'mysql', connection: { host: 'localhost', user: 'pmhcodes', database: 'pmhcodes' } })
 const commands = []
 
 const cmdRoot = path() + '/router/main/commands/'
@@ -18,11 +21,11 @@ readdir(cmdRoot, (err, cmds) => {
  */
 function ready (_, socket) {
   socket.on('connect', (s) => {
+    s.on('main:chat', (res) => socket.emit('main:chat', res))
     s.on('main:cmd', (context) => {
       const query = new Query(context)
       const target = commands.find((v) => v.aliases.includes(query.cmd))
-      if (target) target(query, s)
-      else s.emit('main:resv', '<h1 style="animation: shake 0.5s; color: red;">Error.</h1><hr />Command "' + query.cmd + '" not found')
+      if (target) target(query, s, db)
     })
   })
 }

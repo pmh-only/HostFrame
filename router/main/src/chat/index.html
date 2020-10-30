@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="output"></div>
+    <input id="input" type="text">
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const socket = io()
+      const urlParams = new URLSearchParams(window.location.search)
+      const username = urlParams.get('username');
+
+
+      document.getElementById('input')
+        .addEventListener('keypress', (ev) => {
+          if (ev.key !== 'Enter' || document.getElementById('input').value.length < 1) return
+          socket.emit('main:chat', username + ': ' + document.getElementById('input').value)
+          document.getElementById('input').value = ''
+        })
+      
+      socket.on('main:chat', (res) => {
+        document.getElementById('output').innerHTML += escapeOutput(res) + '<br />'
+        window.scrollTo(0, 9999)
+      })
+
+      function escapeOutput (toOutput) {
+        return toOutput.replace(/\&/g, '&amp;')
+          .replace(/\</g, '&lt;')
+          .replace(/\>/g, '&gt;')
+          .replace(/\"/g, '&quot;')
+          .replace(/\'/g, '&#x27')
+          .replace(/\//g, '&#x2F');
+      }
+    </script>
+  </body>
+</html>
